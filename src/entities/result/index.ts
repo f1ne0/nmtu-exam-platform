@@ -1,4 +1,4 @@
-export type { AnswerRecord, TestResult, ViolationEntry } from './model/types';
+export type { AnswerRecord, TestResult } from './model/types';
 export { useResultStore } from './model/store';
 export {
   getAllResults,

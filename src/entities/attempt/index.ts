@@ -3,7 +3,6 @@ export {
   startAttempt,
   updateAttempt,
   submitAttempt,
-  recordViolation,
 } from './api';
 export type {
   SafeQuestion,

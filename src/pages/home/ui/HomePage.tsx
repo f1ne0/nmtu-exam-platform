@@ -1,6 +1,7 @@
 import {
   Box,
   Center,
+  Collapse,
   Flex,
   Heading,
   HStack,
@@ -9,6 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { ArrowRight, GraduationCap, Pencil } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@shared/config/routes';
 import { useSessionStore } from '@entities/session';
@@ -17,6 +19,8 @@ export const HomePage = () => {
   const navigate = useNavigate();
   const role = useSessionStore((s) => s.role);
   const studentName = useSessionStore((s) => s.studentName);
+  const [secretClicks, setSecretClicks] = useState(0);
+  const secretRevealed = secretClicks >= 7;
 
   const goTeacher = () => {
     if (role === 'teacher') navigate(ROUTES.TEACHER_DASHBOARD);
@@ -77,9 +81,31 @@ export const HomePage = () => {
         </Box>
       </Center>
       <Box as="footer" py={6} textAlign="center">
-        <Text color="ink.500" fontSize="xs" letterSpacing="0.06em">
+        <Text
+          color="ink.500"
+          fontSize="xs"
+          letterSpacing="0.06em"
+          cursor="default"
+          userSelect="none"
+          onClick={() => setSecretClicks((n) => n + 1)}
+          _hover={{ color: 'ink.700' }}
+        >
           v0.2 · Exam Platform · академический инструмент
         </Text>
+        <Collapse in={secretRevealed} animateOpacity>
+          <VStack spacing={1} mt={4} color="accent.500" fontFamily="mono" fontSize="xs">
+            <Text letterSpacing="0.18em" textTransform="uppercase">
+              ✦ скрытая комната ✦
+            </Text>
+            <Text color="ink.700" maxW="sm" textAlign="center">
+              «Тот, кто умеет хорошо думать, найдёт ответы там, где другие видят
+              только вопросы.»
+            </Text>
+            <Text color="ink.500" mt={2}>
+              подсказка: 42 · ↑ ↑ ↓ ↓ ← → ← → B A
+            </Text>
+          </VStack>
+        </Collapse>
       </Box>
     </Flex>
   );

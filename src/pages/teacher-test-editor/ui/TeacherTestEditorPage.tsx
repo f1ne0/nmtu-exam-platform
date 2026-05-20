@@ -151,7 +151,7 @@ const Editor = ({ initial, isNew }: EditorProps) => {
       toast({
         title: isNew ? 'Тест создан' : 'Изменения сохранены',
         status: 'success',
-        position: 'bottom-right',
+        position: 'top',
         duration: 2500,
       });
       navigate(ROUTES.TEACHER_DASHBOARD);
@@ -160,7 +160,7 @@ const Editor = ({ initial, isNew }: EditorProps) => {
         title: 'Проверьте поля',
         description: 'Не все обязательные поля заполнены корректно.',
         status: 'error',
-        position: 'bottom-right',
+        position: 'top',
         duration: 3500,
       });
     }
@@ -506,7 +506,7 @@ const Editor = ({ initial, isNew }: EditorProps) => {
                 ? `Заменено ${items.length} вопрос(ов)`
                 : `Добавлено ${items.length} вопрос(ов)`,
             status: 'success',
-            position: 'bottom-right',
+            position: 'top',
             duration: 2500,
           });
         }}

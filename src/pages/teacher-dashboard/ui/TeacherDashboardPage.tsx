@@ -136,7 +136,7 @@ export const TeacherDashboardPage = () => {
       toast({
         title: `Группа создана. Код: ${g.code}`,
         status: 'success',
-        position: 'bottom-right',
+        position: 'top',
         duration: 4000,
       });
     } catch (e) {
@@ -144,7 +144,7 @@ export const TeacherDashboardPage = () => {
         title: 'Не удалось создать группу',
         description: (e as Error).message,
         status: 'error',
-        position: 'bottom-right',
+        position: 'top',
         duration: 4000,
       });
     } finally {
@@ -159,7 +159,7 @@ export const TeacherDashboardPage = () => {
       toast({
         title: 'Группа удалена',
         status: 'success',
-        position: 'bottom-right',
+        position: 'top',
         duration: 2500,
       });
     } catch (e) {
@@ -167,7 +167,7 @@ export const TeacherDashboardPage = () => {
         title: 'Не удалось удалить группу',
         description: (e as Error).message,
         status: 'error',
-        position: 'bottom-right',
+        position: 'top',
         duration: 4000,
       });
     }
@@ -306,7 +306,7 @@ export const TeacherDashboardPage = () => {
                                     toast({
                                       title: t.archived ? 'Восстановлено' : 'В архиве',
                                       status: 'success',
-                                      position: 'bottom-right',
+                                      position: 'top',
                                       duration: 2000,
                                     });
                                   } catch (e) {
@@ -314,7 +314,7 @@ export const TeacherDashboardPage = () => {
                                       title: 'Не удалось',
                                       description: (e as Error).message,
                                       status: 'error',
-                                      position: 'bottom-right',
+                                      position: 'top',
                                     });
                                   }
                                 }}
@@ -498,14 +498,14 @@ export const TeacherDashboardPage = () => {
                                   toast({
                                     title: 'Код скопирован',
                                     status: 'success',
-                                    position: 'bottom-right',
+                                    position: 'top',
                                     duration: 1500,
                                   });
                                 } catch {
                                   toast({
                                     title: 'Не удалось скопировать',
                                     status: 'error',
-                                    position: 'bottom-right',
+                                    position: 'top',
                                     duration: 2000,
                                   });
                                 }
@@ -603,7 +603,7 @@ export const TeacherDashboardPage = () => {
                     toast({
                       title: 'Результат удалён',
                       status: 'success',
-                      position: 'bottom-right',
+                      position: 'top',
                       duration: 2500,
                     });
                     confirmDelete.onClose();
@@ -614,7 +614,7 @@ export const TeacherDashboardPage = () => {
                       title: 'Не удалось удалить',
                       description: (e as Error).message,
                       status: 'error',
-                      position: 'bottom-right',
+                      position: 'top',
                       duration: 4000,
                     });
                   } finally {

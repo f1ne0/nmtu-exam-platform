@@ -6,11 +6,6 @@ export interface AnswerRecord {
   correctIndex: number;
 }
 
-export interface ViolationEntry {
-  kind: string;
-  at: string;
-}
-
 export interface TestResult {
   id: string;
   testId: string;
@@ -21,6 +16,5 @@ export interface TestResult {
   percentage: number;
   completedAt: number;
   answers: AnswerRecord[];
-  violations: ViolationEntry[];
   groupId: string | null;
 }

@@ -20,7 +20,6 @@ export interface ResultRow {
   total: number;
   percentage: number;
   answers: unknown;
-  violations: unknown;
   completed_at: string;
   group_id: string | null;
 }

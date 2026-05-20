@@ -7,25 +7,13 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { AlertTriangle, CheckCircle2, MinusCircle, XCircle } from 'lucide-react';
+import { CheckCircle2, MinusCircle, XCircle } from 'lucide-react';
 import {
   gradeColor,
   type AnswerRecord,
   type TestResult,
-  type ViolationEntry,
 } from '@entities/result';
 import { formatDateTime } from '@shared/lib/format';
-
-const VIOLATION_LABEL: Record<string, string> = {
-  visibility_hidden: 'Свернул вкладку',
-  fullscreen_exit: 'Вышел из полноэкранного',
-  copy_attempt: 'Попытка копирования',
-  paste_attempt: 'Попытка вставки',
-  context_menu: 'Контекстное меню',
-  shortcut_block: 'Запрещённая комбинация',
-  devtools_open: 'DevTools',
-  window_blur: 'Переключение окна',
-};
 
 interface Props {
   result: TestResult;
@@ -78,8 +66,6 @@ export const ResultDetailView = ({ result, groupName }: Props) => (
       </Box>
     </HStack>
 
-    {result.violations.length > 0 && <ViolationsBlock violations={result.violations} />}
-
     <Divider />
 
     <Stack spacing={5}>
@@ -88,33 +74,6 @@ export const ResultDetailView = ({ result, groupName }: Props) => (
       ))}
     </Stack>
   </Stack>
-);
-
-const ViolationsBlock = ({ violations }: { violations: ViolationEntry[] }) => (
-  <Box borderWidth="1px" borderColor="warn" borderRadius="sm" p={4} bg="card">
-    <HStack spacing={2} mb={3} color="warn">
-      <AlertTriangle size={18} strokeWidth={1.5} />
-      <Text
-        fontFamily="heading"
-        fontWeight={500}
-        fontSize="sm"
-        letterSpacing="0.04em"
-        textTransform="uppercase"
-      >
-        Нарушения · {violations.length}
-      </Text>
-    </HStack>
-    <Stack spacing={1}>
-      {violations.map((v, i) => (
-        <HStack key={i} spacing={3} fontSize="sm" fontFamily="mono">
-          <Text color="ink.500" minW="16ch">
-            {formatDateTime(new Date(v.at).getTime())}
-          </Text>
-          <Text color="ink.700">{VIOLATION_LABEL[v.kind] ?? v.kind}</Text>
-        </HStack>
-      ))}
-    </Stack>
-  </Box>
 );
 
 interface AnswerProps {

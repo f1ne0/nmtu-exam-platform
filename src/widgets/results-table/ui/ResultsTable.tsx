@@ -9,11 +9,9 @@ import {
   Text,
   Th,
   Thead,
-  Tooltip,
   Tr,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import { AlertTriangle } from 'lucide-react';
 import { gradeColor, type TestResult } from '@entities/result';
 import { formatDateTime } from '@shared/lib/format';
 
@@ -103,20 +101,7 @@ export const ResultsTable = ({ results, onRowClick, groupNameById }: Props) => {
               onClick={() => onRowClick(r)}
             >
               <Td fontWeight={500}>
-                <HStack spacing={2}>
-                  <Text>{r.studentName}</Text>
-                  {r.violations.length > 0 && (
-                    <Tooltip
-                      label={`Нарушений: ${r.violations.length}`}
-                      hasArrow
-                      placement="top"
-                    >
-                      <Box color="warn">
-                        <AlertTriangle size={14} strokeWidth={1.5} />
-                      </Box>
-                    </Tooltip>
-                  )}
-                </HStack>
+                <Text>{r.studentName}</Text>
               </Td>
               <Td color={r.groupId ? 'ink.900' : 'ink.500'} fontFamily="mono" fontSize="sm">
                 {groupLabel(r, groupNameById)}

@@ -1,5 +1,3 @@
-import type { ViolationKind } from './types';
-
 interface FsDocument extends Document {
   webkitFullscreenElement?: Element | null;
   mozFullScreenElement?: Element | null;
@@ -42,32 +40,6 @@ export const requestFullscreen = async (): Promise<void> => {
     else if (el.mozRequestFullScreen) await el.mozRequestFullScreen();
     else if (el.msRequestFullscreen) await el.msRequestFullscreen();
   } catch (e) {
-    // Пользователь отказал, или браузер не поддерживает.
     console.warn('[fullscreen] request failed', e);
   }
-};
-
-export interface FullscreenWatchdogOptions {
-  onExit: (kind: ViolationKind) => void;
-}
-
-export const installFullscreenWatchdog = ({ onExit }: FullscreenWatchdogOptions) => {
-  let wasActive = isFullscreenActive();
-  const onChange = () => {
-    const nowActive = isFullscreenActive();
-    if (wasActive && !nowActive) {
-      onExit('fullscreen_exit');
-    }
-    wasActive = nowActive;
-  };
-  document.addEventListener('fullscreenchange', onChange);
-  document.addEventListener('webkitfullscreenchange', onChange);
-  document.addEventListener('mozfullscreenchange', onChange);
-  document.addEventListener('MSFullscreenChange', onChange);
-  return () => {
-    document.removeEventListener('fullscreenchange', onChange);
-    document.removeEventListener('webkitfullscreenchange', onChange);
-    document.removeEventListener('mozfullscreenchange', onChange);
-    document.removeEventListener('MSFullscreenChange', onChange);
-  };
 };

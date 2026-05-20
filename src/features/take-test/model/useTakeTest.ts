@@ -73,16 +73,44 @@ export const useTakeTest = (
     return () => window.clearInterval(id);
   }, [state.attempt, state.test, startedAtMs, totalSeconds]);
 
+  const attemptIdRef = useRef<string | null>(null);
+  attemptIdRef.current = state.attempt?.id ?? null;
+  const pendingRef = useRef<{ selections?: Array<number | null>; currentIndex?: number }>({});
+  const timerRef = useRef<number | null>(null);
+
+  const flush = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    const id = attemptIdRef.current;
+    const patch = pendingRef.current;
+    if (!id || Object.keys(patch).length === 0) return;
+    pendingRef.current = {};
+    void updateAttempt(id, patch).catch((e) =>
+      console.warn('[take-test] persist failed', e),
+    );
+  }, []);
+
   const persist = useCallback(
     (patch: { selections?: Array<number | null>; currentIndex?: number }) => {
-      const a = state.attempt;
-      if (!a) return;
-      void updateAttempt(a.id, patch).catch((e) =>
-        console.warn('[take-test] persist failed', e),
-      );
+      pendingRef.current = { ...pendingRef.current, ...patch };
+      if (timerRef.current !== null) window.clearTimeout(timerRef.current);
+      timerRef.current = window.setTimeout(flush, 500);
     },
-    [state.attempt],
+    [flush],
   );
+
+  useEffect(() => {
+    const onHide = () => flush();
+    window.addEventListener('beforeunload', onHide);
+    document.addEventListener('visibilitychange', onHide);
+    return () => {
+      window.removeEventListener('beforeunload', onHide);
+      document.removeEventListener('visibilitychange', onHide);
+      flush();
+    };
+  }, [flush]);
 
   const select = useCallback(
     (qIdx: number, optIdx: number) => {
@@ -119,11 +147,43 @@ export const useTakeTest = (
     goTo(Math.max(state.attempt.currentIndex - 1, 0));
   }, [goTo, state.attempt]);
 
+  // =========================================================
+  // ИЗМЕНЕННАЯ ФУНКЦИЯ SUBMIT (проверка ответов на клиенте)
+  // =========================================================
   const submit = useCallback(async (): Promise<string | null> => {
     if (!state.attempt) return null;
+    flush();
     setState((prev) => ({ ...prev, status: 'submitting', error: null }));
+
     try {
-      const { resultId } = await submitAttempt(testId, state.attempt.selections);
+      const questions = state.attempt.shuffledQuestions;
+      const selections = state.attempt.selections;
+
+      let correctCount = 0;
+
+      // 1. Подсчитываем правильные ответы
+      questions.forEach((q, idx) => {
+        if (selections[idx] === q.correctIndex) {
+          correctCount++;
+        }
+      });
+
+      // 2. Считаем процент правильных ответов
+      const totalQuestions = questions.length;
+      const scorePercentage = totalQuestions > 0
+        ? Math.round((correctCount / totalQuestions) * 100)
+        : 0;
+
+      // 3. Отправляем на сервер вычисленные баллы
+      // ВНИМАНИЕ: Вам нужно обновить функцию submitAttempt,
+      // чтобы она принимала эти новые аргументы!
+      const { resultId } = await submitAttempt(
+        testId,
+        selections,
+        correctCount,
+        scorePercentage
+      );
+
       setState((prev) => ({ ...prev, status: 'submitted', resultId }));
       return resultId;
     } catch (e) {
@@ -131,7 +191,7 @@ export const useTakeTest = (
       setState((prev) => ({ ...prev, status: 'ready', error: msg }));
       return null;
     }
-  }, [state.attempt, testId]);
+  }, [flush, state.attempt, testId]);
 
   const answeredCount = useMemo(
     () => (state.attempt ? state.attempt.selections.filter((s) => s !== null).length : 0),

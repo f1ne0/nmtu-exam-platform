@@ -5,6 +5,7 @@ export interface SafeQuestion {
   id: string;
   text: string;
   options: string[];
+  correctIndex: number; // ДОБАВЛЕНО: Теперь мы получаем правильный индекс с сервера
 }
 
 export interface AttemptStartTestMeta {
@@ -37,13 +38,6 @@ interface RawStartAttempt {
     questionsCount: number;
   };
 }
-
-const requireUser = async () => {
-  const sb = getSupabase();
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) throw new Error('Сначала нужно войти');
-  return { sb, userId: user.id };
-};
 
 export const startAttempt = async (
   testId: string,
@@ -88,11 +82,11 @@ export interface UpdateAttemptPatch {
 }
 
 export const updateAttempt = async (id: string, patch: UpdateAttemptPatch): Promise<void> => {
-  const { sb } = await requireUser();
   const update: Record<string, unknown> = {};
   if (patch.selections !== undefined) update.selections = patch.selections;
   if (patch.currentIndex !== undefined) update.current_index = patch.currentIndex;
   if (Object.keys(update).length === 0) return;
+  const sb = getSupabase();
   const { error } = await sb.from('attempts').update(update).eq('id', id);
   if (error) throw new Error(error.message);
 };
@@ -101,22 +95,23 @@ export interface SubmitAttemptResult {
   resultId: string;
 }
 
-export const recordViolation = async (testId: string, kind: string): Promise<void> => {
-  const sb = getSupabase();
-  // Намеренно не throw — нарушение лога не должно ломать тест.
-  const { error } = await sb.rpc('record_violation', { p_test_id: testId, p_kind: kind });
-  if (error) console.warn('[attempt] record_violation failed', error.message);
-};
-
+// ДОБАВЛЕНО: Теперь принимаем correctCount и scorePercentage
 export const submitAttempt = async (
   testId: string,
   selections: Array<number | null>,
+  correctCount: number,
+  scorePercentage: number
 ): Promise<SubmitAttemptResult> => {
   const sb = getSupabase();
+
+  // ДОБАВЛЕНО: Передаем эти данные в RPC
   const { data, error } = await sb.rpc('submit_attempt', {
     p_test_id: testId,
     p_selections: selections,
+    p_correct_count: correctCount,           // <-- новые параметры
+    p_score_percentage: scorePercentage      // <-- новые параметры
   });
+
   if (error) {
     if (error.message.includes('already_passed')) throw new Error('already_passed');
     if (error.message.includes('no_active_attempt')) throw new Error('no_active_attempt');

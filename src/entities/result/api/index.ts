@@ -1,5 +1,5 @@
 import { getSupabase, type ResultRow } from '@shared/api/supabase';
-import type { AnswerRecord, TestResult, ViolationEntry } from '../model/types';
+import type { AnswerRecord, TestResult } from '../model/types';
 
 const rowToResult = (r: ResultRow): TestResult => ({
   id: r.id,
@@ -11,7 +11,6 @@ const rowToResult = (r: ResultRow): TestResult => ({
   percentage: r.percentage,
   completedAt: new Date(r.completed_at).getTime(),
   answers: (r.answers as AnswerRecord[]) ?? [],
-  violations: (r.violations as ViolationEntry[]) ?? [],
   groupId: r.group_id,
 });
 

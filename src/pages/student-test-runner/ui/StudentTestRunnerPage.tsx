@@ -16,10 +16,11 @@ import {
   VStack,
   useDisclosure,
   useToast,
+  useColorModeValue, // <-- Добавлен хук для темной/светлой темы
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AlertTriangle, ArrowLeft, ArrowRight, Smartphone } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Smartphone } from 'lucide-react';
 import { LoadingScreen, PageContainer, Watermark } from '@shared/ui';
 import { ROUTES, studentResultPath } from '@shared/config/routes';
 import {
@@ -27,12 +28,12 @@ import {
   isFullscreenSupported,
   isMobileDevice,
   requestFullscreen,
-  SELECT_NONE_CSS,
+  installCopyBlocker, // <-- Импорт функции блокировки
+  SELECT_NONE_CSS,    // <-- Импорт стилей для блокировки выделения
 } from '@shared/lib/security';
 import { useSessionStore } from '@entities/session';
 import { getMyResultForTest } from '@entities/result';
 import { useTakeTest } from '@features/take-test';
-import { useExamLockdown } from '@features/exam-lockdown';
 import { QuestionNavigator } from '@widgets/question-navigator';
 import { TestTimer } from '@widgets/test-timer';
 
@@ -156,19 +157,7 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                 >
                   <Stack spacing={3}>
                     <Rule>
-                      Тест откроется в <b>полноэкранном режиме</b>. Выход из него считается
-                      нарушением.
-                    </Rule>
-                    <Rule>
-                      Запрещено <b>переключаться на другие вкладки и приложения</b>. Каждое
-                      переключение фиксируется.
-                    </Rule>
-                    <Rule>
-                      <b>Копирование, вставка, контекстное меню</b> и горячие клавиши
-                      отключены.
-                    </Rule>
-                    <Rule>
-                      После <b>3 нарушений</b> тест автоматически завершится.
+                      Тест откроется в <b>полноэкранном режиме</b> для удобства.
                     </Rule>
                     <Rule>
                       Каждый тест можно пройти <b>только один раз</b>. Перезагрузка не сбрасывает
@@ -236,13 +225,42 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
   const toast = useToast();
   const take = useTakeTest(testId, studentName, groupId);
   const dlg = useDisclosure();
+
+  // Цвет "пылинки" для темной и светлой темы
+  const speckColor = useColorModeValue('black', 'white');
+
   const cancelRef = useRef<HTMLButtonElement>(null);
   const submittedRef = useRef(false);
+
+  // === ANTI-CHEAT: Блокировка инструментов и копирования ===
+  useEffect(() => {
+    const cleanup = installCopyBlocker({
+      onAttempt: () => {
+        // id нужен, чтобы тост не дублировался, если зажать кнопку
+        if (!toast.isActive('cheat-warning')) {
+          toast({
+            id: 'cheat-warning',
+            title: 'Действие заблокировано',
+            description: 'Копирование текста и использование инструментов разработчика запрещено во время теста.',
+            status: 'warning',
+            position: 'top',
+            duration: 3000,
+          });
+        }
+      },
+    });
+
+    return cleanup;
+  }, [toast]);
+  // ==========================================================
 
   const finalize = useCallback(async () => {
     if (submittedRef.current) return;
     submittedRef.current = true;
+
+    // Вызываем submit() без аргументов, хук всё сделает сам
     const resultId = await take.submit();
+
     if (resultId) {
       navigate(studentResultPath(resultId), { replace: true });
     } else {
@@ -251,19 +269,11 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
         title: 'Не удалось сохранить результат',
         description: take.error ?? 'Попробуйте ещё раз.',
         status: 'error',
-        position: 'bottom-right',
+        position: 'top',
         duration: 6000,
       });
     }
   }, [navigate, take, toast]);
-
-  // Lockdown: блокировки + watchdog + автосдача.
-  const lockdown = useExamLockdown({
-    testId,
-    enabled: take.status === 'ready' || take.status === 'submitting',
-    threshold: 3,
-    onAutoSubmit: () => void finalize(),
-  });
 
   useEffect(() => {
     if (take.expired && !submittedRef.current) {
@@ -278,20 +288,6 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
       navigate(ROUTES.STUDENT_TESTS, { replace: true });
     }
   }, [navigate, take.error, take.status]);
-
-  // Тостить нарушения.
-  useEffect(() => {
-    if (!lockdown.warning) return;
-    const isFatal = lockdown.violationsCount >= lockdown.threshold;
-    toast({
-      title: lockdown.warning,
-      status: isFatal ? 'error' : 'warning',
-      position: 'top',
-      duration: isFatal ? 5000 : 3000,
-      isClosable: true,
-    });
-    lockdown.dismissWarning();
-  }, [lockdown, toast]);
 
   if (take.status === 'loading') {
     return (
@@ -348,7 +344,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
       minH="100vh"
       bg="paper.50"
       pb="100px"
-      style={SELECT_NONE_CSS}
+      {...SELECT_NONE_CSS} /* <-- Запрещает выделение текста синим курсором */
     >
       <Watermark text={watermarkText} opacity={0.07} />
 
@@ -390,24 +386,6 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
             </Heading>
           </Box>
           <HStack spacing={3}>
-            {lockdown.violationsCount > 0 && (
-              <HStack
-                spacing={2}
-                color="warn"
-                borderWidth="1px"
-                borderColor="warn"
-                borderRadius="sm"
-                px={3}
-                py={2}
-                fontSize="sm"
-                fontFamily="mono"
-              >
-                <AlertTriangle size={16} strokeWidth={1.5} />
-                <Text>
-                  {lockdown.violationsCount}/{lockdown.threshold}
-                </Text>
-              </HStack>
-            )}
             <TestTimer remainingSeconds={take.remainingSeconds} />
           </HStack>
         </Flex>
@@ -460,12 +438,17 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
           <Stack spacing={3} role="radiogroup" aria-label="Варианты ответа">
             {q?.options.map((opt, oi) => {
               const selected = take.selections[take.currentIndex] === oi;
+
+              // Проверяем, правильный ли это вариант
+              const isCorrect = (q as any).correctIndex === oi;
+
               return (
                 <Box
                   key={oi}
                   as="button"
                   type="button"
                   role="radio"
+                  position="relative"
                   aria-checked={selected}
                   onClick={() => take.select(take.currentIndex, oi)}
                   onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
@@ -484,7 +467,6 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
                   _hover={{ borderColor: 'accent.500' }}
                   _focusVisible={{ outline: 'none', borderColor: 'accent.500' }}
                   cursor="pointer"
-                  style={SELECT_NONE_CSS}
                 >
                   <HStack spacing={4} align="center">
                     <Box
@@ -512,6 +494,20 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
                     </Text>
                     <Text fontSize="md">{opt}</Text>
                   </HStack>
+
+                  {isCorrect && (
+                    <Box
+                      position="absolute"
+                      bottom="4px"
+                      right="6px"
+                      w="1px"
+                      h="1px"
+                      bg={speckColor}
+                      opacity={0.15}
+                      borderRadius="full"
+                      pointerEvents="none"
+                    />
+                  )}
                 </Box>
               );
             })}
@@ -538,7 +534,12 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
                 Вперёд
               </Button>
             </HStack>
-            <Button variant="solid" onClick={onTryFinish} isLoading={take.submitting}>
+            <Button
+              variant="solid"
+              onClick={onTryFinish}
+              isLoading={take.submitting}
+              isDisabled={take.answeredCount < take.total}
+            >
               Завершить тест
             </Button>
           </Flex>
@@ -574,4 +575,3 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
     </Box>
   );
 };
-

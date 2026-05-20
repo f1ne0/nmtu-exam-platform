@@ -34,7 +34,7 @@ export const DeleteTestButton = ({ testId, testTitle, variant = 'icon' }: Props)
       toast({
         title: 'Тест удалён',
         status: 'success',
-        position: 'bottom-right',
+        position: 'top',
         duration: 2500,
       });
       onClose();
@@ -43,7 +43,7 @@ export const DeleteTestButton = ({ testId, testTitle, variant = 'icon' }: Props)
         title: 'Не удалось удалить',
         description: (e as Error).message,
         status: 'error',
-        position: 'bottom-right',
+        position: 'top',
         duration: 4000,
       });
     } finally {
