@@ -12,6 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@widgets/app-header';
 import { ROUTES } from '@shared/config/routes';
@@ -19,6 +20,7 @@ import { useSessionStore } from '@entities/session';
 import { useAuthTeacher } from '@features/auth-teacher';
 
 export const TeacherAuthPage = () => {
+  const { t } = useTranslation();
   const { loading, error, submit, clearError } = useAuthTeacher();
   const navigate = useNavigate();
   const role = useSessionStore((s) => s.role);
@@ -55,13 +57,13 @@ export const TeacherAuthPage = () => {
               letterSpacing="0.16em"
               textTransform="uppercase"
             >
-              Преподаватель
+              {t('teacherAuth.eyebrow')}
             </Text>
             <Heading fontFamily="heading" fontWeight={500} size="xl" letterSpacing="-0.02em">
-              Войти в кабинет
+              {t('teacherAuth.title')}
             </Heading>
             <Text color="ink.700" fontSize="sm">
-              Используйте email и пароль, выданные администратором.
+              {t('teacherAuth.subtitle')}
             </Text>
           </VStack>
 
@@ -73,7 +75,7 @@ export const TeacherAuthPage = () => {
                 letterSpacing="0.06em"
                 textTransform="uppercase"
               >
-                Email
+                {t('teacherAuth.emailLabel')}
               </FormLabel>
               <Input
                 type="email"
@@ -94,7 +96,7 @@ export const TeacherAuthPage = () => {
                 letterSpacing="0.06em"
                 textTransform="uppercase"
               >
-                Пароль
+                {t('teacherAuth.passwordLabel')}
               </FormLabel>
               <Input
                 type="password"
@@ -116,7 +118,7 @@ export const TeacherAuthPage = () => {
               size="lg"
               borderRadius="sm"
             >
-              Войти
+              {t('teacherAuth.submit')}
             </Button>
           </Stack>
         </Box>

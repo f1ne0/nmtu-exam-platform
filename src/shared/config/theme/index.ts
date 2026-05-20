@@ -191,5 +191,21 @@ export const theme = extendTheme({
     Divider: {
       baseStyle: { borderColor: 'line' },
     },
+    Menu: {
+      baseStyle: {
+        list: {
+          bg: 'card',
+          borderColor: 'line',
+          borderRadius: 'sm',
+          boxShadow: 'none',
+          py: 1,
+        },
+        item: {
+          bg: 'card',
+          _hover: { bg: 'paper.100' },
+          _focus: { bg: 'paper.100' },
+        },
+      },
+    },
   },
 });

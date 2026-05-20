@@ -1,0 +1,145 @@
+{
+  "home": {
+    "eyebrow": "Платформа для проведения тестов",
+    "title": "Exam Platform",
+    "subtitleGuest": "Выберите роль, чтобы продолжить.",
+    "subtitleTeacher": "Вы вошли как преподаватель.",
+    "subtitleStudent": "Вы вошли как {{name}}.",
+    "teacherTitle": "Я преподаватель",
+    "teacherDescription": "Создавайте тесты, открывайте к ним доступ и просматривайте результаты студентов.",
+    "studentTitle": "Я студент",
+    "studentDescription": "Введите имя и пройдите доступные тесты. Результат покажем сразу.",
+    "actionLogin": "Войти",
+    "actionGoToCabinet": "В кабинет",
+    "actionContinueAs": "Продолжить как {{name}}",
+    "continue": "Продолжить",
+    "footer": "v0.2 · Exam Platform · академический инструмент"
+  },
+  "teacherAuth": {
+    "eyebrow": "Преподаватель",
+    "title": "Войти в кабинет",
+    "subtitle": "Используйте email и пароль, выданные администратором.",
+    "emailLabel": "Email",
+    "passwordLabel": "Пароль",
+    "submit": "Войти"
+  },
+  "header": {
+    "darkTheme": "Тёмная тема",
+    "lightTheme": "Светлая тема",
+    "enableDark": "Включить тёмную тему",
+    "enableLight": "Включить светлую тему",
+    "logout": "Выйти"
+  },
+  "runner": {
+    "prepEyebrow": "Подготовка к тесту",
+    "prepTitle": "Правила прохождения",
+    "mobileTitle": "Мобильное устройство",
+    "mobileBody": "Тест рекомендуется проходить с компьютера. На мобильных устройствах многие защитные механизмы (полноэкранный режим, отслеживание переключений) работают ограниченно — это будет видно преподавателю.",
+    "mobileAck": "Я понимаю и продолжу",
+    "ruleFullscreen": "Тест откроется в <b>полноэкранном режиме</b> для удобства.",
+    "ruleOnce": "Каждый тест можно пройти <b>только один раз</b>. Перезагрузка не сбрасывает таймер.",
+    "cancel": "Отмена",
+    "startFs": "Начать в полноэкранном режиме",
+    "start": "Начать тест",
+    "loadingLabel": "Открываем тест",
+    "errorTitle": "Не удалось открыть тест",
+    "errors": {
+      "test_not_found": "Тест не найден",
+      "already_passed": "Этот тест вы уже проходили.",
+      "test_archived": "Тест в архиве и временно недоступен.",
+      "group_required": "Этот тест доступен только студентам с кодом группы. Войдите снова с кодом.",
+      "group_not_allowed": "Тест не назначен вашей группе.",
+      "students_only": "Эта страница только для студентов.",
+      "start_failed": "Не удалось начать тест",
+      "finish_failed": "Не удалось завершить тест",
+      "fallback": "Не удалось открыть тест"
+    },
+    "backToList": "К списку тестов",
+    "running": "Тест идёт",
+    "fsOff": "Полноэкранный режим выключен.",
+    "fsRestore": "Включить заново",
+    "questionLabel": "Вопрос {{current}} / {{total}}",
+    "optionsAria": "Варианты ответа",
+    "prev": "Назад",
+    "next": "Вперёд",
+    "finish": "Завершить тест",
+    "confirmTitle": "Завершить тест?",
+    "confirmBody": "Вы ответили на <b>{{answered}}</b> из <b>{{total}}</b> вопросов. После завершения изменить ответы будет нельзя.",
+    "confirmKeep": "Продолжить",
+    "confirmFinish": "Завершить"
+  },
+  "studentResult": {
+    "subtitle": "Результат",
+    "notFound": "Результат не найден",
+    "backToList": "К списку тестов",
+    "completed": "Тест завершён",
+    "scoreLabel": "Балл",
+    "scoreDetail": "{{score}} {{correctWord}} из {{total}} {{ofTotal}}",
+    "percentLabel": "Процент",
+    "answersTitle": "Разбор ответов",
+    "backLong": "Вернуться к списку тестов"
+  },
+  "studentTests": {
+    "subtitle": "Доступные тесты",
+    "greeting": "Здравствуйте",
+    "groupLabel": "Группа: {{name}}",
+    "loadErrorTitle": "Не удалось загрузить тесты",
+    "emptyTitle": "Доступных тестов пока нет",
+    "emptyDescription": "Когда преподаватель опубликует тест, он появится здесь.",
+    "untitled": "Без названия",
+    "passedBadge": "Пройден · {{score}}/{{total}} · {{percentage}}%",
+    "viewResult": "Посмотреть результат",
+    "start": "Начать тест",
+    "confirmTitle": "Начать тест?",
+    "confirmBody": "Тест начнётся сразу. Длительность <b>{{minutes}} мин</b>. Прервать нельзя — после старта таймер остановить невозможно. Каждый тест можно пройти <b>только один раз</b>.",
+    "back": "Назад",
+    "confirmStart": "Начать"
+  },
+  "nav": {
+    "question": "Вопрос",
+    "jumpTo": "Перейти к вопросу {{n}}"
+  },
+  "common": {
+    "minutes_one": "минута",
+    "minutes_few": "минуты",
+    "minutes_many": "минут",
+    "questions_one": "вопрос",
+    "questions_few": "вопроса",
+    "questions_many": "вопросов"
+  },
+  "toast": {
+    "blockedTitle": "Действие заблокировано",
+    "blockedDescription": "Копирование текста и использование инструментов разработчика запрещено во время теста.",
+    "saveFailedTitle": "Не удалось сохранить результат",
+    "tryAgain": "Попробуйте ещё раз.",
+    "loadTestsFailed": "Не удалось загрузить тесты",
+    "startTestFailed": "Не удалось начать тест",
+    "finishTestFailed": "Не удалось завершить тест"
+  },
+  "authStudent": {
+    "errors": {
+      "name_too_short": "Введите фамилию и имя",
+      "code_not_found": "Код группы не найден",
+      "code_check_failed": "Не удалось проверить код",
+      "signin_failed": "Не удалось войти"
+    }
+  },
+  "studentName": {
+    "eyebrow": "Студент",
+    "title": "Представьтесь",
+    "subtitle": "Имя будет сохранено вместе с результатом и видно преподавателю.",
+    "fullNameLabel": "Фамилия и имя",
+    "fullNamePlaceholder": "Например: Иванов Иван",
+    "fullNameHelper": "Как в зачётной книжке.",
+    "groupCodeLabel": "Код группы (опционально)",
+    "groupCodePlaceholder": "ABC123",
+    "groupCodeHelper": "Если преподаватель выдал код — введите. Без него увидите только общедоступные тесты.",
+    "submit": "Продолжить"
+  },
+  "language": {
+    "ru": "Русский",
+    "uz": "O‘zbekcha",
+    "kaa": "Qaraqalpaqsha",
+    "label": "Язык"
+  }
+}

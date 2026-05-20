@@ -13,6 +13,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@widgets/app-header';
 import { useSessionStore } from '@entities/session';
@@ -20,12 +21,19 @@ import { useAuthStudent } from '@features/auth-student';
 import { ROUTES } from '@shared/config/routes';
 
 export const StudentNamePage = () => {
+  const { t } = useTranslation();
   const existingName = useSessionStore((s) => s.studentName);
   const role = useSessionStore((s) => s.role);
   const [name, setName] = useState(existingName ?? '');
   const [groupCode, setGroupCode] = useState('');
   const navigate = useNavigate();
-  const { loading, error, submit } = useAuthStudent();
+  const { loading, error: errorCode, submit } = useAuthStudent();
+  const KNOWN = ['name_too_short', 'code_not_found', 'code_check_failed', 'signin_failed'] as const;
+  const error = errorCode
+    ? KNOWN.includes(errorCode as typeof KNOWN[number])
+      ? t(`authStudent.errors.${errorCode}` as const)
+      : errorCode
+    : null;
 
   useEffect(() => {
     if (role === 'student' && existingName) {
@@ -50,13 +58,13 @@ export const StudentNamePage = () => {
               letterSpacing="0.16em"
               textTransform="uppercase"
             >
-              Студент
+              {t('studentName.eyebrow')}
             </Text>
             <Heading fontFamily="heading" fontWeight={500} size="xl" letterSpacing="-0.02em">
-              Представьтесь
+              {t('studentName.title')}
             </Heading>
             <Text color="ink.700" fontSize="sm">
-              Имя будет сохранено вместе с результатом и видно преподавателю.
+              {t('studentName.subtitle')}
             </Text>
           </VStack>
 
@@ -68,19 +76,19 @@ export const StudentNamePage = () => {
                 letterSpacing="0.06em"
                 textTransform="uppercase"
               >
-                Фамилия и имя
+                {t('studentName.fullNameLabel')}
               </FormLabel>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
-                placeholder="Например: Иванов Иван"
+                placeholder={t('studentName.fullNamePlaceholder')}
                 fontFamily="heading"
                 fontSize="lg"
                 autoFocus
               />
               <FormHelperText color="ink.500" fontSize="xs">
-                Как в зачётной книжке.
+                {t('studentName.fullNameHelper')}
               </FormHelperText>
             </FormControl>
 
@@ -91,13 +99,13 @@ export const StudentNamePage = () => {
                 letterSpacing="0.06em"
                 textTransform="uppercase"
               >
-                Код группы (опционально)
+                {t('studentName.groupCodeLabel')}
               </FormLabel>
               <Input
                 value={groupCode}
                 onChange={(e) => setGroupCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
-                placeholder="ABC123"
+                placeholder={t('studentName.groupCodePlaceholder')}
                 fontFamily="mono"
                 fontSize="lg"
                 letterSpacing="0.1em"
@@ -107,7 +115,7 @@ export const StudentNamePage = () => {
                 <FormErrorMessage>{error}</FormErrorMessage>
               ) : (
                 <FormHelperText color="ink.500" fontSize="xs">
-                  Если преподаватель выдал код — введите. Без него увидите только общедоступные тесты.
+                  {t('studentName.groupCodeHelper')}
                 </FormHelperText>
               )}
             </FormControl>
@@ -119,7 +127,7 @@ export const StudentNamePage = () => {
               isLoading={loading}
               isDisabled={name.trim().length < 2}
             >
-              Продолжить
+              {t('studentName.submit')}
             </Button>
           </Stack>
         </Box>

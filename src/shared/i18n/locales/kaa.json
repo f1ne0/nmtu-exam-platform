@@ -1,0 +1,145 @@
+{
+  "home": {
+    "eyebrow": "Testlerdi ótkeriw platforması",
+    "title": "Exam Platform",
+    "subtitleGuest": "Dawam etiw ushın rolińizdi saylań.",
+    "subtitleTeacher": "Siz oqıtıwshı sıpatında kirdińiz.",
+    "subtitleStudent": "Siz {{name}} sıpatında kirdińiz.",
+    "teacherTitle": "Men oqıtıwshıman",
+    "teacherDescription": "Testler jaratıń, olarǵa ruqsat beriń hám studentlerdiń nátiyjelerin kóriń.",
+    "studentTitle": "Men studentpen",
+    "studentDescription": "Atıńızdı kiritiń hám bar testlerden ótiń. Nátiyjeni dárriw kórsetemiz.",
+    "actionLogin": "Kiriw",
+    "actionGoToCabinet": "Kabinetke",
+    "actionContinueAs": "{{name}} sıpatında dawam etiw",
+    "continue": "Dawam etiw",
+    "footer": "v0.2 · Exam Platform · akademik instrument"
+  },
+  "teacherAuth": {
+    "eyebrow": "Oqıtıwshı",
+    "title": "Kabinetke kiriw",
+    "subtitle": "Administrator bergen email hám paroldı qollanıń.",
+    "emailLabel": "Email",
+    "passwordLabel": "Parol",
+    "submit": "Kiriw"
+  },
+  "header": {
+    "darkTheme": "Túngi rejim",
+    "lightTheme": "Kúndizgi rejim",
+    "enableDark": "Túngi rejimdi qosıw",
+    "enableLight": "Kúndizgi rejimdi qosıw",
+    "logout": "Shıǵıw"
+  },
+  "runner": {
+    "prepEyebrow": "Testke tayarlıq",
+    "prepTitle": "Ótiw qaǵıydaları",
+    "mobileTitle": "Mobil qurılma",
+    "mobileBody": "Testti kompyuterde tapsırıw maslahát etiledi. Mobil qurılmalarda kópshilik qorǵaw mexanizmleri (tolıq ekran, ayna almasıwın baqlaw) sheklengen islaydi — bunı oqıtıwshı kóredi.",
+    "mobileAck": "Túsindim, dawam etemen",
+    "ruleFullscreen": "Test ańsatlıq ushın <b>tolıq ekran rejiminde</b> ashıladı.",
+    "ruleOnce": "Hár bir testti <b>tek bir ret</b> tapsırıw múmkin. Qayta júklense taymerdi qayta baslamaydı.",
+    "cancel": "Biykarlaw",
+    "startFs": "Tolıq ekranda baslaw",
+    "start": "Testti baslaw",
+    "loadingLabel": "Test ashılıp atır",
+    "errorTitle": "Testti ashıp bolmadı",
+    "errors": {
+      "test_not_found": "Test tabılmadı",
+      "already_passed": "Bul testti siz aldın tapsırǵansız.",
+      "test_archived": "Test arxivde hám waqtınsha qoljetımsız.",
+      "group_required": "Bul test tek gruppa kodı bar studentler ushın. Qayttan kod menen kiriń.",
+      "group_not_allowed": "Test siziń gruppańızǵa tayinlanbaǵan.",
+      "students_only": "Bul bet tek studentler ushın.",
+      "start_failed": "Testti baslap bolmadı",
+      "finish_failed": "Testti tamamlap bolmadı",
+      "fallback": "Testti ashıp bolmadı"
+    },
+    "backToList": "Testler dizimine",
+    "running": "Test atqarılıp atır",
+    "fsOff": "Tolıq ekran rejimi óshirilgen.",
+    "fsRestore": "Qayta qosıw",
+    "questionLabel": "Soraw {{current}} / {{total}}",
+    "optionsAria": "Juwap variantları",
+    "prev": "Artqa",
+    "next": "Aldıǵa",
+    "finish": "Testti tamamlaw",
+    "confirmTitle": "Testti tamamlaymızba?",
+    "confirmBody": "Siz <b>{{total}}</b> sorawdan <b>{{answered}}</b> ǵa juwap berdińiz. Tamamlanǵannan keyin juwaplardı ózgertip bolmaydı.",
+    "confirmKeep": "Dawam etiw",
+    "confirmFinish": "Tamamlaw"
+  },
+  "studentResult": {
+    "subtitle": "Nátiyje",
+    "notFound": "Nátiyje tabılmadı",
+    "backToList": "Testler dizimine",
+    "completed": "Test tamamlandı",
+    "scoreLabel": "Ball",
+    "scoreDetail": "{{total}} sorawdan {{score}} ǵa durıs juwap",
+    "percentLabel": "Procent",
+    "answersTitle": "Juwaplar talqılawı",
+    "backLong": "Testler dizimine qaytıw"
+  },
+  "studentTests": {
+    "subtitle": "Bar testler",
+    "greeting": "Assalawma aleykum",
+    "groupLabel": "Gruppa: {{name}}",
+    "loadErrorTitle": "Testlerdi júklep bolmadı",
+    "emptyTitle": "Házirshe bar testler joq",
+    "emptyDescription": "Oqıtıwshı testti járiyalaǵan waqıtta, ol usı jerde payda boladı.",
+    "untitled": "Atı joq",
+    "passedBadge": "Ótilgen · {{score}}/{{total}} · {{percentage}}%",
+    "viewResult": "Nátiyjeni kóriw",
+    "start": "Testti baslaw",
+    "confirmTitle": "Testti baslaymızba?",
+    "confirmBody": "Test dárriw baslanadı. Dawamlılıǵı <b>{{minutes}} minut</b>. Toqtatıp bolmaydı — start basılǵannan keyin taymerdi toqtatıp bolmaydı. Hár bir testti <b>tek bir ret</b> tapsırıw múmkin.",
+    "back": "Artqa",
+    "confirmStart": "Baslaw"
+  },
+  "nav": {
+    "question": "Soraw",
+    "jumpTo": "{{n}}-sorawǵa ótiw"
+  },
+  "common": {
+    "minutes_one": "minut",
+    "minutes_few": "minut",
+    "minutes_many": "minut",
+    "questions_one": "soraw",
+    "questions_few": "soraw",
+    "questions_many": "soraw"
+  },
+  "toast": {
+    "blockedTitle": "Háreket bloklandı",
+    "blockedDescription": "Test waqtında tekstti kóshiriw hám islep shıǵarıwshı quralların paydalanıw qadaǵan.",
+    "saveFailedTitle": "Nátiyjeni saqlap bolmadı",
+    "tryAgain": "Qaytadan urınıp kóriń.",
+    "loadTestsFailed": "Testlerdi júklep bolmadı",
+    "startTestFailed": "Testti baslap bolmadı",
+    "finishTestFailed": "Testti tamamlap bolmadı"
+  },
+  "authStudent": {
+    "errors": {
+      "name_too_short": "Familiya hám atıńızdı kiritiń",
+      "code_not_found": "Gruppa kodı tabılmadı",
+      "code_check_failed": "Koddı tekserip bolmadı",
+      "signin_failed": "Kirip bolmadı"
+    }
+  },
+  "studentName": {
+    "eyebrow": "Student",
+    "title": "Ózińizdi tanıstırıń",
+    "subtitle": "Atı nátiyje menen birge saqlanadı hám oqıtıwshıǵa kórinedi.",
+    "fullNameLabel": "Familiya hám atı",
+    "fullNamePlaceholder": "Mısalı: Ivanov Ivan",
+    "fullNameHelper": "Baha kitapshasındaǵı sıyaqlı.",
+    "groupCodeLabel": "Gruppa kodı (qálegen jaǵdayda)",
+    "groupCodePlaceholder": "ABC123",
+    "groupCodeHelper": "Eger oqıtıwshı kod bergen bolsa — kiritiń. Kodsız tek ulıwma testlerdi kóresiz.",
+    "submit": "Dawam etiw"
+  },
+  "language": {
+    "ru": "Rus tili",
+    "uz": "Ózbek tili",
+    "kaa": "Qaraqalpaqsha",
+    "label": "Til"
+  }
+}

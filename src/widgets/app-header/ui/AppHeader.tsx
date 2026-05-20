@@ -1,8 +1,10 @@
 import { Box, Flex, HStack, IconButton, Text, Tooltip, useColorMode } from '@chakra-ui/react';
 import { LogOut, Moon, Sun } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useSessionStore } from '@entities/session';
 import { ROUTES } from '@shared/config/routes';
+import { LanguageSwitcher } from '@widgets/language-switcher';
 import type { ReactNode } from 'react';
 
 interface Props {
@@ -12,6 +14,7 @@ interface Props {
 }
 
 export const AppHeader = ({ subtitle, right, showLogout = true }: Props) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const role = useSessionStore((s) => s.role);
   const studentName = useSessionStore((s) => s.studentName);
@@ -68,13 +71,14 @@ export const AppHeader = ({ subtitle, right, showLogout = true }: Props) => {
         </Box>
         <HStack spacing={3}>
           {right}
+          <LanguageSwitcher />
           <Tooltip
-            label={colorMode === 'light' ? 'Тёмная тема' : 'Светлая тема'}
+            label={colorMode === 'light' ? t('header.darkTheme') : t('header.lightTheme')}
             placement="bottom-end"
             hasArrow
           >
             <IconButton
-              aria-label={colorMode === 'light' ? 'Включить тёмную тему' : 'Включить светлую тему'}
+              aria-label={colorMode === 'light' ? t('header.enableDark') : t('header.enableLight')}
               icon={
                 colorMode === 'light'
                   ? <Moon size={18} strokeWidth={1.5} />
@@ -106,9 +110,9 @@ export const AppHeader = ({ subtitle, right, showLogout = true }: Props) => {
                   {email}
                 </Text>
               )}
-              <Tooltip label="Выйти" placement="bottom-end" hasArrow>
+              <Tooltip label={t('header.logout')} placement="bottom-end" hasArrow>
                 <IconButton
-                  aria-label="Выйти"
+                  aria-label={t('header.logout')}
                   icon={<LogOut size={18} strokeWidth={1.5} />}
                   variant="ghost"
                   onClick={onLogout}

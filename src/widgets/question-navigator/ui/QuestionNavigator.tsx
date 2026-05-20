@@ -1,4 +1,5 @@
 import { Box, HStack, Text, Wrap, WrapItem, useBreakpointValue } from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
   total: number;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export const QuestionNavigator = ({ total, currentIndex, selections, onJump }: Props) => {
+  const { t } = useTranslation();
   const collapsed = useBreakpointValue({ base: true, md: false });
 
   if (collapsed) {
@@ -22,7 +24,7 @@ export const QuestionNavigator = ({ total, currentIndex, selections, onJump }: P
         px={4}
       >
         <Text color="ink.500" fontSize="xs" letterSpacing="0.06em" textTransform="uppercase">
-          Вопрос
+          {t('nav.question')}
         </Text>
         <Text fontFamily="mono">
           {currentIndex + 1} / {total}
@@ -40,7 +42,7 @@ export const QuestionNavigator = ({ total, currentIndex, selections, onJump }: P
           <WrapItem key={i}>
             <Box
               as="button"
-              aria-label={`Перейти к вопросу ${i + 1}`}
+              aria-label={t('nav.jumpTo', { n: i + 1 })}
               aria-current={isCurrent ? 'true' : undefined}
               onClick={() => onJump(i)}
               w="36px"

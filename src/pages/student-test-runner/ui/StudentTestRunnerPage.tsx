@@ -19,6 +19,7 @@ import {
   useColorModeValue, // <-- Добавлен хук для темной/светлой темы
 } from '@chakra-ui/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Smartphone } from 'lucide-react';
 import { LoadingScreen, PageContainer, Watermark } from '@shared/ui';
@@ -84,6 +85,7 @@ interface GateProps {
 }
 
 const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [armed, setArmed] = useState(false);
   const [acknowledgedMobile, setAckMobile] = useState(false);
@@ -108,10 +110,10 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                 textTransform="uppercase"
                 mb={1}
               >
-                Подготовка к тесту
+                {t('runner.prepEyebrow')}
               </Text>
               <Heading fontFamily="heading" fontWeight={500} size="xl" letterSpacing="-0.02em">
-                Правила прохождения
+                {t('runner.prepTitle')}
               </Heading>
             </Box>
 
@@ -127,12 +129,10 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                   <Smartphone size={20} strokeWidth={1.5} color="var(--chakra-colors-warn)" />
                   <Box>
                     <Heading size="sm" fontFamily="heading" fontWeight={500} mb={2}>
-                      Мобильное устройство
+                      {t('runner.mobileTitle')}
                     </Heading>
                     <Text color="ink.700" fontSize="sm">
-                      Тест рекомендуется проходить с компьютера. На мобильных устройствах
-                      многие защитные механизмы (полноэкранный режим, отслеживание переключений)
-                      работают ограниченно — это будет видно преподавателю.
+                      {t('runner.mobileBody')}
                     </Text>
                   </Box>
                 </HStack>
@@ -141,7 +141,7 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                   variant="outline"
                   onClick={() => setAckMobile(true)}
                 >
-                  Я понимаю и продолжу
+                  {t('runner.mobileAck')}
                 </Button>
               </Box>
             )}
@@ -156,13 +156,8 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                   bg="card"
                 >
                   <Stack spacing={3}>
-                    <Rule>
-                      Тест откроется в <b>полноэкранном режиме</b> для удобства.
-                    </Rule>
-                    <Rule>
-                      Каждый тест можно пройти <b>только один раз</b>. Перезагрузка не сбрасывает
-                      таймер.
-                    </Rule>
+                    <Rule html={t('runner.ruleFullscreen')} />
+                    <Rule html={t('runner.ruleOnce')} />
                   </Stack>
                 </Box>
 
@@ -176,7 +171,7 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                     onClick={() => navigate(ROUTES.STUDENT_TESTS)}
                     width={{ base: 'full', md: 'auto' }}
                   >
-                    Отмена
+                    {t('runner.cancel')}
                   </Button>
                   <Button
                     variant="solid"
@@ -184,7 +179,7 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
                     size="lg"
                     width={{ base: 'full', md: 'auto' }}
                   >
-                    {fsSupported ? 'Начать в полноэкранном режиме' : 'Начать тест'}
+                    {fsSupported ? t('runner.startFs') : t('runner.start')}
                   </Button>
                 </Stack>
               </>
@@ -198,7 +193,7 @@ const RunnerGate = ({ testId, studentName, groupId }: GateProps) => {
   return <Runner testId={testId} studentName={studentName} groupId={groupId} />;
 };
 
-const Rule = ({ children }: { children: React.ReactNode }) => (
+const Rule = ({ html }: { html: string }) => (
   <HStack spacing={3} align="flex-start">
     <Box
       mt="6px"
@@ -208,9 +203,12 @@ const Rule = ({ children }: { children: React.ReactNode }) => (
       bg="accent.500"
       flexShrink={0}
     />
-    <Text color="ink.700" fontSize="sm" lineHeight="1.6">
-      {children}
-    </Text>
+    <Text
+      color="ink.700"
+      fontSize="sm"
+      lineHeight="1.6"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   </HStack>
 );
 
@@ -221,6 +219,7 @@ interface RunnerProps {
 }
 
 const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
   const take = useTakeTest(testId, studentName, groupId);
@@ -240,8 +239,8 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
         if (!toast.isActive('cheat-warning')) {
           toast({
             id: 'cheat-warning',
-            title: 'Действие заблокировано',
-            description: 'Копирование текста и использование инструментов разработчика запрещено во время теста.',
+            title: t('toast.blockedTitle'),
+            description: t('toast.blockedDescription'),
             status: 'warning',
             position: 'top',
             duration: 3000,
@@ -251,7 +250,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
     });
 
     return cleanup;
-  }, [toast]);
+  }, [t, toast]);
   // ==========================================================
 
   const finalize = useCallback(async () => {
@@ -265,15 +264,21 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
       navigate(studentResultPath(resultId), { replace: true });
     } else {
       submittedRef.current = false;
+      const FINALIZE_ERROR_KEYS = ['test_not_found', 'already_passed', 'test_archived', 'group_required', 'group_not_allowed', 'students_only', 'start_failed', 'finish_failed'] as const;
+      const desc = take.error
+        ? FINALIZE_ERROR_KEYS.includes(take.error as typeof FINALIZE_ERROR_KEYS[number])
+          ? t(`runner.errors.${take.error}` as const)
+          : take.error
+        : t('toast.tryAgain');
       toast({
-        title: 'Не удалось сохранить результат',
-        description: take.error ?? 'Попробуйте ещё раз.',
+        title: t('toast.saveFailedTitle'),
+        description: desc,
         status: 'error',
         position: 'top',
         duration: 6000,
       });
     }
-  }, [navigate, take, toast]);
+  }, [navigate, t, take, toast]);
 
   useEffect(() => {
     if (take.expired && !submittedRef.current) {
@@ -292,37 +297,27 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
   if (take.status === 'loading') {
     return (
       <Box minH="100vh" bg="paper.50">
-        <LoadingScreen label="Открываем тест" />
+        <LoadingScreen label={t('runner.loadingLabel')} />
       </Box>
     );
   }
 
   if (take.status === 'error') {
-    const friendly =
-      take.error === 'test_not_found'
-        ? 'Тест не найден'
-        : take.error === 'already_passed'
-          ? 'Этот тест вы уже проходили.'
-          : take.error === 'test_archived'
-            ? 'Тест в архиве и временно недоступен.'
-            : take.error === 'group_required'
-              ? 'Этот тест доступен только студентам с кодом группы. Войдите снова с кодом.'
-              : take.error === 'group_not_allowed'
-                ? 'Тест не назначен вашей группе.'
-                : take.error === 'students_only'
-                  ? 'Эта страница только для студентов.'
-                  : (take.error ?? 'Не удалось открыть тест');
+    const ERROR_KEYS = ['test_not_found', 'already_passed', 'test_archived', 'group_required', 'group_not_allowed', 'students_only', 'start_failed', 'finish_failed'] as const;
+    const friendly = ERROR_KEYS.includes(take.error as typeof ERROR_KEYS[number])
+      ? t(`runner.errors.${take.error}` as const)
+      : (take.error ?? t('runner.errors.fallback'));
     return (
       <Box minH="100vh" bg="paper.50">
         <PageContainer>
           <Heading size="md" mb={4}>
-            Не удалось открыть тест
+            {t('runner.errorTitle')}
           </Heading>
           <Text color="ink.700" mb={4}>
             {friendly}
           </Text>
           <Button variant="outline" onClick={() => navigate(ROUTES.STUDENT_TESTS)}>
-            К списку тестов
+            {t('runner.backToList')}
           </Button>
         </PageContainer>
       </Box>
@@ -373,7 +368,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
               letterSpacing="0.12em"
               textTransform="uppercase"
             >
-              Тест идёт
+              {t('runner.running')}
             </Text>
             <Heading
               size="md"
@@ -391,14 +386,14 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
         </Flex>
         {!fsActive && isFullscreenSupported() && (
           <Box bg="warn" color="white" px={4} py={2} fontSize="sm" textAlign="center">
-            Полноэкранный режим выключен.{' '}
+            {t('runner.fsOff')}{' '}
             <Box
               as="button"
               textDecoration="underline"
               fontWeight={500}
               onClick={() => void requestFullscreen()}
             >
-              Включить заново
+              {t('runner.fsRestore')}
             </Box>
           </Box>
         )}
@@ -422,7 +417,10 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
               mb={2}
               fontFamily="mono"
             >
-              Вопрос {String(take.currentIndex + 1).padStart(2, '0')} / {take.total}
+              {t('runner.questionLabel', {
+                current: String(take.currentIndex + 1).padStart(2, '0'),
+                total: take.total,
+              })}
             </Text>
             <Heading
               fontFamily="heading"
@@ -435,7 +433,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
             </Heading>
           </Box>
 
-          <Stack spacing={3} role="radiogroup" aria-label="Варианты ответа">
+          <Stack spacing={3} role="radiogroup" aria-label={t('runner.optionsAria')}>
             {q?.options.map((opt, oi) => {
               const selected = take.selections[take.currentIndex] === oi;
 
@@ -523,7 +521,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
                 onClick={take.goPrev}
                 isDisabled={take.isFirst}
               >
-                Назад
+                {t('runner.prev')}
               </Button>
               <Button
                 variant="ghost"
@@ -531,7 +529,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
                 onClick={take.goNext}
                 isDisabled={take.isLast}
               >
-                Вперёд
+                {t('runner.next')}
               </Button>
             </HStack>
             <Button
@@ -540,7 +538,7 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
               isLoading={take.submitting}
               isDisabled={take.answeredCount < take.total}
             >
-              Завершить тест
+              {t('runner.finish')}
             </Button>
           </Flex>
         </Stack>
@@ -555,18 +553,23 @@ const Runner = ({ testId, studentName, groupId }: RunnerProps) => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontFamily="heading" fontWeight={500}>
-              Завершить тест?
+              {t('runner.confirmTitle')}
             </AlertDialogHeader>
-            <AlertDialogBody color="ink.700">
-              Вы ответили на <b>{take.answeredCount}</b> из <b>{take.total}</b> вопросов. После
-              завершения изменить ответы будет нельзя.
-            </AlertDialogBody>
+            <AlertDialogBody
+              color="ink.700"
+              dangerouslySetInnerHTML={{
+                __html: t('runner.confirmBody', {
+                  answered: take.answeredCount,
+                  total: take.total,
+                }),
+              }}
+            />
             <AlertDialogFooter gap={3}>
               <Button ref={cancelRef} variant="ghost" onClick={dlg.onClose}>
-                Продолжить
+                {t('runner.confirmKeep')}
               </Button>
               <Button variant="solid" onClick={onConfirmFinish} isLoading={take.submitting}>
-                Завершить
+                {t('runner.confirmFinish')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>

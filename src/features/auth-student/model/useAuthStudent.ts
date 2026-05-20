@@ -13,7 +13,7 @@ export const useAuthStudent = () => {
     const trimmedName = name.trim();
     const trimmedCode = groupCode.trim().toUpperCase();
     if (trimmedName.length < 2) {
-      setError('Введите фамилию и имя');
+      setError('name_too_short');
       setLoading(false);
       return false;
     }
@@ -22,13 +22,13 @@ export const useAuthStudent = () => {
       try {
         const found = await findGroupByCode(trimmedCode);
         if (!found) {
-          setError('Код группы не найден');
+          setError('code_not_found');
           setLoading(false);
           return false;
         }
         group = { id: found.id, name: found.name };
       } catch (e) {
-        setError((e as Error).message ?? 'Не удалось проверить код');
+        setError((e as Error).message ?? 'code_check_failed');
         setLoading(false);
         return false;
       }
@@ -36,11 +36,13 @@ export const useAuthStudent = () => {
     const res = await signInStudent(trimmedName, group);
     setLoading(false);
     if (!res.ok) {
-      setError(res.error ?? 'Не удалось войти');
+      setError(res.error ?? 'signin_failed');
       return false;
     }
     return true;
   };
 
-  return { loading, error, submit };
+  const clearError = () => setError(null);
+
+  return { loading, error, submit, clearError };
 };

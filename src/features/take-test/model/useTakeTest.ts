@@ -43,7 +43,7 @@ export const useTakeTest = (
           resultId: null,
         });
       } catch (e) {
-        const msg = (e as Error).message ?? 'Не удалось начать тест';
+        const msg = (e as Error).message ?? 'start_failed';
         setState({
           status: 'error',
           attempt: null,
@@ -187,7 +187,7 @@ export const useTakeTest = (
       setState((prev) => ({ ...prev, status: 'submitted', resultId }));
       return resultId;
     } catch (e) {
-      const msg = (e as Error).message ?? 'Не удалось завершить тест';
+      const msg = (e as Error).message ?? 'finish_failed';
       setState((prev) => ({ ...prev, status: 'ready', error: msg }));
       return null;
     }

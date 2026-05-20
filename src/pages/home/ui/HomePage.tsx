@@ -11,11 +11,14 @@ import {
 } from '@chakra-ui/react';
 import { ArrowRight, GraduationCap, Pencil } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@shared/config/routes';
+import { LanguageSwitcher } from '@widgets/language-switcher';
 import { useSessionStore } from '@entities/session';
 
 export const HomePage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const role = useSessionStore((s) => s.role);
   const studentName = useSessionStore((s) => s.studentName);
@@ -31,9 +34,18 @@ export const HomePage = () => {
     else navigate(ROUTES.STUDENT_NAME);
   };
 
+  const subtitle = role === 'teacher'
+    ? t('home.subtitleTeacher')
+    : role === 'student'
+      ? t('home.subtitleStudent', { name: studentName ?? '' })
+      : t('home.subtitleGuest');
+
   return (
     <Flex direction="column" minH="100vh" bg="paper.50">
-      <Center flex="1" px={4} py={10}>
+      <Flex justify="flex-end" px={{ base: 4, md: 8 }} pt={4}>
+        <LanguageSwitcher />
+      </Flex>
+      <Center flex="1" px={4} py={6}>
         <Box maxW="960px" w="full">
           <ScaleFade in initialScale={0.96}>
             <VStack spacing={3} mb={{ base: 8, md: 12 }} textAlign="center">
@@ -43,7 +55,7 @@ export const HomePage = () => {
                 letterSpacing="0.18em"
                 textTransform="uppercase"
               >
-                Платформа для проведения тестов
+                {t('home.eyebrow')}
               </Text>
               <Heading
                 fontFamily="heading"
@@ -52,30 +64,34 @@ export const HomePage = () => {
                 letterSpacing="-0.03em"
                 lineHeight="1"
               >
-                Exam Platform
+                {t('home.title')}
               </Heading>
               <Text color="ink.700" maxW="md" mt={2}>
-                {role
-                  ? `Вы вошли как ${role === 'teacher' ? 'преподаватель' : studentName ?? 'студент'}.`
-                  : 'Выберите роль, чтобы продолжить.'}
+                {subtitle}
               </Text>
             </VStack>
           </ScaleFade>
 
           <Flex direction={{ base: 'column', md: 'row' }} gap={4}>
             <RoleCard
-              title="Я преподаватель"
-              description="Создавайте тесты, открывайте к ним доступ и просматривайте результаты студентов."
+              title={t('home.teacherTitle')}
+              description={t('home.teacherDescription')}
               icon={<Pencil size={24} strokeWidth={1.5} />}
-              actionLabel={role === 'teacher' ? 'В кабинет' : 'Войти'}
+              actionLabel={role === 'teacher' ? t('home.actionGoToCabinet') : t('home.actionLogin')}
               onClick={goTeacher}
+              continueLabel={t('home.continue')}
             />
             <RoleCard
-              title="Я студент"
-              description="Введите имя и пройдите доступные тесты. Результат покажем сразу."
+              title={t('home.studentTitle')}
+              description={t('home.studentDescription')}
               icon={<GraduationCap size={24} strokeWidth={1.5} />}
-              actionLabel={role === 'student' && studentName ? `Продолжить как ${studentName}` : 'Войти'}
+              actionLabel={
+                role === 'student' && studentName
+                  ? t('home.actionContinueAs', { name: studentName })
+                  : t('home.actionLogin')
+              }
               onClick={goStudent}
+              continueLabel={t('home.continue')}
             />
           </Flex>
         </Box>
@@ -90,7 +106,7 @@ export const HomePage = () => {
           onClick={() => setSecretClicks((n) => n + 1)}
           _hover={{ color: 'ink.700' }}
         >
-          v0.2 · Exam Platform · академический инструмент
+          {t('home.footer')}
         </Text>
         <Collapse in={secretRevealed} animateOpacity>
           <VStack spacing={1} mt={4} color="accent.500" fontFamily="mono" fontSize="xs">
@@ -116,10 +132,11 @@ interface RoleProps {
   description: string;
   icon: React.ReactNode;
   actionLabel: string;
+  continueLabel: string;
   onClick: () => void;
 }
 
-const RoleCard = ({ title, description, icon, actionLabel, onClick }: RoleProps) => (
+const RoleCard = ({ title, description, icon, actionLabel, continueLabel, onClick }: RoleProps) => (
   <Box
     as="button"
     onClick={onClick}
@@ -158,7 +175,7 @@ const RoleCard = ({ title, description, icon, actionLabel, onClick }: RoleProps)
           {description}
         </Text>
         <HStack color="accent.500" fontSize="sm" fontWeight={500}>
-          <Text>Продолжить</Text>
+          <Text>{continueLabel}</Text>
           <ArrowRight size={16} strokeWidth={1.5} />
         </HStack>
       </Box>

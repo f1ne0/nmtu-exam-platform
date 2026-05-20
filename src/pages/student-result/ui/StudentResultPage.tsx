@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { CheckCircle2, MinusCircle, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AppHeader } from '@widgets/app-header';
 import { LoadingScreen, PageContainer } from '@shared/ui';
@@ -26,6 +27,7 @@ import { useSessionStore } from '@entities/session';
 import { formatDateTime, pluralizeRu } from '@shared/lib/format';
 
 export const StudentResultPage = () => {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const params = useParams<{ id: string }>();
   const role = useSessionStore((s) => s.role);
@@ -60,10 +62,10 @@ export const StudentResultPage = () => {
         <AppHeader />
         <PageContainer>
           <Heading size="md" mb={4}>
-            Результат не найден
+            {t('studentResult.notFound')}
           </Heading>
           <Button variant="outline" onClick={() => navigate(ROUTES.STUDENT_TESTS)}>
-            К списку тестов
+            {t('studentResult.backToList')}
           </Button>
         </PageContainer>
       </Box>
@@ -79,12 +81,17 @@ export const StudentResultPage = () => {
     );
   }
 
-  const correctWord = pluralizeRu(result.score, ['правильный', 'правильных', 'правильных']);
-  const ofTotal = pluralizeRu(result.total, ['вопрос', 'вопроса', 'вопросов']);
+  const isRu = i18n.language === 'ru';
+  const correctWord = isRu
+    ? pluralizeRu(result.score, ['правильный', 'правильных', 'правильных'])
+    : '';
+  const ofTotal = isRu
+    ? pluralizeRu(result.total, ['вопрос', 'вопроса', 'вопросов'])
+    : '';
 
   return (
     <Box minH="100vh" bg="paper.50">
-      <AppHeader subtitle="Результат" />
+      <AppHeader subtitle={t('studentResult.subtitle')} />
       <PageContainer>
         <ScaleFade in initialScale={0.97}>
           <VStack spacing={2} align="stretch" mb={8}>
@@ -94,7 +101,7 @@ export const StudentResultPage = () => {
               letterSpacing="0.16em"
               textTransform="uppercase"
             >
-              Тест завершён
+              {t('studentResult.completed')}
             </Text>
             <Heading
               fontFamily="heading"
@@ -123,7 +130,7 @@ export const StudentResultPage = () => {
                 textTransform="uppercase"
                 mb={1}
               >
-                Балл
+                {t('studentResult.scoreLabel')}
               </Text>
               <Heading
                 fontFamily="heading"
@@ -138,7 +145,12 @@ export const StudentResultPage = () => {
                 </Text>
               </Heading>
               <Text color="ink.500" fontSize="sm" mt={2}>
-                {result.score} {correctWord} из {result.total} {ofTotal}
+                {t('studentResult.scoreDetail', {
+                  score: result.score,
+                  total: result.total,
+                  correctWord,
+                  ofTotal,
+                })}
               </Text>
             </Box>
             <Box>
@@ -149,7 +161,7 @@ export const StudentResultPage = () => {
                 textTransform="uppercase"
                 mb={1}
               >
-                Процент
+                {t('studentResult.percentLabel')}
               </Text>
               <Heading
                 fontFamily="heading"
@@ -168,7 +180,7 @@ export const StudentResultPage = () => {
 
           <Box mb={8}>
             <Heading size="md" mb={4} fontFamily="heading" fontWeight={500}>
-              Разбор ответов
+              {t('studentResult.answersTitle')}
             </Heading>
             <Accordion allowMultiple>
               {result.answers.map((a, i) => {
@@ -255,7 +267,7 @@ export const StudentResultPage = () => {
             onClick={() => navigate(ROUTES.STUDENT_TESTS)}
             size="lg"
           >
-            Вернуться к списку тестов
+            {t('studentResult.backLong')}
           </Button>
         </ScaleFade>
       </PageContainer>

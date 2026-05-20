@@ -1,0 +1,145 @@
+{
+  "home": {
+    "eyebrow": "Testlarni o‘tkazish platformasi",
+    "title": "Exam Platform",
+    "subtitleGuest": "Davom etish uchun rolingizni tanlang.",
+    "subtitleTeacher": "Siz o‘qituvchi sifatida kirgansiz.",
+    "subtitleStudent": "Siz {{name}} sifatida kirgansiz.",
+    "teacherTitle": "Men o‘qituvchiman",
+    "teacherDescription": "Testlar yarating, ularga ruxsat bering va talabalarning natijalarini ko‘ring.",
+    "studentTitle": "Men talabaman",
+    "studentDescription": "Ismingizni kiriting va mavjud testlardan o‘ting. Natijani darhol ko‘rsatamiz.",
+    "actionLogin": "Kirish",
+    "actionGoToCabinet": "Kabinetga",
+    "actionContinueAs": "{{name}} sifatida davom etish",
+    "continue": "Davom etish",
+    "footer": "v0.2 · Exam Platform · akademik vosita"
+  },
+  "teacherAuth": {
+    "eyebrow": "O‘qituvchi",
+    "title": "Kabinetga kirish",
+    "subtitle": "Administrator bergan email va parolni ishlating.",
+    "emailLabel": "Email",
+    "passwordLabel": "Parol",
+    "submit": "Kirish"
+  },
+  "header": {
+    "darkTheme": "Tungi rejim",
+    "lightTheme": "Kunduzgi rejim",
+    "enableDark": "Tungi rejimni yoqish",
+    "enableLight": "Kunduzgi rejimni yoqish",
+    "logout": "Chiqish"
+  },
+  "runner": {
+    "prepEyebrow": "Testga tayyorgarlik",
+    "prepTitle": "O‘tish qoidalari",
+    "mobileTitle": "Mobil qurilma",
+    "mobileBody": "Testni kompyuterda topshirish tavsiya etiladi. Mobil qurilmalarda ko‘pgina himoya mexanizmlari (to‘liq ekran, oynalar o‘zgarishini kuzatish) cheklangan ishlaydi — buni o‘qituvchi ko‘radi.",
+    "mobileAck": "Tushundim, davom etaman",
+    "ruleFullscreen": "Test qulaylik uchun <b>to‘liq ekran rejimida</b> ochiladi.",
+    "ruleOnce": "Har bir testni <b>faqat bir marta</b> topshirish mumkin. Sahifani yangilash taymerni qayta boshlamaydi.",
+    "cancel": "Bekor qilish",
+    "startFs": "To‘liq ekranda boshlash",
+    "start": "Testni boshlash",
+    "loadingLabel": "Test ochilmoqda",
+    "errorTitle": "Testni ochib bo‘lmadi",
+    "errors": {
+      "test_not_found": "Test topilmadi",
+      "already_passed": "Bu testni siz allaqachon topshirgansiz.",
+      "test_archived": "Test arxivda va vaqtincha mavjud emas.",
+      "group_required": "Bu test faqat guruh kodi bo‘lgan talabalar uchun. Qaytadan kod bilan kiring.",
+      "group_not_allowed": "Test sizning guruhingizga tayinlanmagan.",
+      "students_only": "Bu sahifa faqat talabalar uchun.",
+      "start_failed": "Testni boshlab bo‘lmadi",
+      "finish_failed": "Testni yakunlab bo‘lmadi",
+      "fallback": "Testni ochib bo‘lmadi"
+    },
+    "backToList": "Testlar ro‘yxatiga",
+    "running": "Test ketmoqda",
+    "fsOff": "To‘liq ekran rejimi o‘chirilgan.",
+    "fsRestore": "Qayta yoqish",
+    "questionLabel": "Savol {{current}} / {{total}}",
+    "optionsAria": "Javob variantlari",
+    "prev": "Orqaga",
+    "next": "Oldinga",
+    "finish": "Testni yakunlash",
+    "confirmTitle": "Testni yakunlashni xohlaysizmi?",
+    "confirmBody": "Siz <b>{{total}}</b> savoldan <b>{{answered}}</b> tasiga javob berdingiz. Yakunlangandan keyin javoblarni o‘zgartirib bo‘lmaydi.",
+    "confirmKeep": "Davom etish",
+    "confirmFinish": "Yakunlash"
+  },
+  "studentResult": {
+    "subtitle": "Natija",
+    "notFound": "Natija topilmadi",
+    "backToList": "Testlar ro‘yxatiga",
+    "completed": "Test yakunlandi",
+    "scoreLabel": "Ball",
+    "scoreDetail": "{{total}} ta savoldan {{score}} tasiga to‘g‘ri javob",
+    "percentLabel": "Foiz",
+    "answersTitle": "Javoblar tahlili",
+    "backLong": "Testlar ro‘yxatiga qaytish"
+  },
+  "studentTests": {
+    "subtitle": "Mavjud testlar",
+    "greeting": "Assalomu alaykum",
+    "groupLabel": "Guruh: {{name}}",
+    "loadErrorTitle": "Testlarni yuklab bo‘lmadi",
+    "emptyTitle": "Hozircha mavjud testlar yo‘q",
+    "emptyDescription": "O‘qituvchi testni e‘lon qilganda, u shu yerda paydo bo‘ladi.",
+    "untitled": "Nomi yo‘q",
+    "passedBadge": "O‘tilgan · {{score}}/{{total}} · {{percentage}}%",
+    "viewResult": "Natijani ko‘rish",
+    "start": "Testni boshlash",
+    "confirmTitle": "Testni boshlaymizmi?",
+    "confirmBody": "Test darhol boshlanadi. Davomiyligi <b>{{minutes}} daqiqa</b>. To‘xtatib bo‘lmaydi — start bosilgandan keyin taymerni to‘xtatib bo‘lmaydi. Har bir testni <b>faqat bir marta</b> topshirish mumkin.",
+    "back": "Orqaga",
+    "confirmStart": "Boshlash"
+  },
+  "nav": {
+    "question": "Savol",
+    "jumpTo": "{{n}}-savolga o‘tish"
+  },
+  "common": {
+    "minutes_one": "daqiqa",
+    "minutes_few": "daqiqa",
+    "minutes_many": "daqiqa",
+    "questions_one": "savol",
+    "questions_few": "savol",
+    "questions_many": "savol"
+  },
+  "toast": {
+    "blockedTitle": "Harakat bloklandi",
+    "blockedDescription": "Test paytida matn nusxalash va dasturchi vositalaridan foydalanish taqiqlanadi.",
+    "saveFailedTitle": "Natijani saqlab bo‘lmadi",
+    "tryAgain": "Qaytadan urinib ko‘ring.",
+    "loadTestsFailed": "Testlarni yuklab bo‘lmadi",
+    "startTestFailed": "Testni boshlab bo‘lmadi",
+    "finishTestFailed": "Testni yakunlab bo‘lmadi"
+  },
+  "authStudent": {
+    "errors": {
+      "name_too_short": "Familiya va ismni kiriting",
+      "code_not_found": "Guruh kodi topilmadi",
+      "code_check_failed": "Kodni tekshirib bo‘lmadi",
+      "signin_failed": "Kirib bo‘lmadi"
+    }
+  },
+  "studentName": {
+    "eyebrow": "Talaba",
+    "title": "O‘zingizni tanishtiring",
+    "subtitle": "Ism natija bilan birga saqlanadi va o‘qituvchiga ko‘rinadi.",
+    "fullNameLabel": "Familiya va ism",
+    "fullNamePlaceholder": "Masalan: Ivanov Ivan",
+    "fullNameHelper": "Zachётka kitobchasidagi kabi.",
+    "groupCodeLabel": "Guruh kodi (ixtiyoriy)",
+    "groupCodePlaceholder": "ABC123",
+    "groupCodeHelper": "Agar o‘qituvchi kod bergan bo‘lsa — kiriting. Kodsiz faqat ommaviy testlarni ko‘rasiz.",
+    "submit": "Davom etish"
+  },
+  "language": {
+    "ru": "Ruscha",
+    "uz": "O‘zbekcha",
+    "kaa": "Qoraqalpoqcha",
+    "label": "Til"
+  }
+}

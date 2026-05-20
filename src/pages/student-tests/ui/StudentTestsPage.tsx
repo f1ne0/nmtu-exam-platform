@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { CheckCircle2, Clock, Inbox, ListChecks } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { AppHeader } from '@widgets/app-header';
 import { EmptyState, LoadingScreen, PageContainer } from '@shared/ui';
@@ -26,9 +27,9 @@ import { ROUTES, studentResultPath, studentRunPath } from '@shared/config/routes
 import { listTestsForStudent, type StudentTestSummary } from '@entities/test';
 import { gradeColor, getMyResults, type TestResult } from '@entities/result';
 import { useSessionStore } from '@entities/session';
-import { pluralizeRu } from '@shared/lib/format';
 
 export const StudentTestsPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const role = useSessionStore((s) => s.role);
   const studentName = useSessionStore((s) => s.studentName);
@@ -60,7 +61,7 @@ export const StudentTestsPage = () => {
         setMyResults(r);
       } catch (e) {
         if (!alive) return;
-        setError((e as Error).message ?? 'Не удалось загрузить тесты');
+        setError((e as Error).message ?? t('toast.loadTestsFailed'));
         setTests([]);
         setMyResults([]);
       }
@@ -68,7 +69,7 @@ export const StudentTestsPage = () => {
     return () => {
       alive = false;
     };
-  }, [studentGroupId]);
+  }, [studentGroupId, t]);
 
   const passedByTestId = useMemo(() => {
     const map = new Map<string, TestResult>();
@@ -94,7 +95,7 @@ export const StudentTestsPage = () => {
 
   return (
     <Box minH="100vh" bg="paper.50">
-      <AppHeader subtitle="Доступные тесты" />
+      <AppHeader subtitle={t('studentTests.subtitle')} />
       <PageContainer>
         <Flex justify="space-between" align="baseline" mb={6} gap={4} wrap="wrap">
           <Box>
@@ -105,14 +106,14 @@ export const StudentTestsPage = () => {
               textTransform="uppercase"
               mb={1}
             >
-              Здравствуйте
+              {t('studentTests.greeting')}
             </Text>
             <Heading fontFamily="heading" fontWeight={500} size="xl" letterSpacing="-0.02em">
               {studentName}
             </Heading>
             {studentGroupName && (
               <Text color="ink.500" fontSize="sm" mt={1} fontFamily="mono">
-                Группа: {studentGroupName}
+                {t('studentTests.groupLabel', { name: studentGroupName })}
               </Text>
             )}
           </Box>
@@ -121,12 +122,12 @@ export const StudentTestsPage = () => {
         {isLoading ? (
           <LoadingScreen minH="40vh" />
         ) : error ? (
-          <EmptyState icon={Inbox} title="Не удалось загрузить тесты" description={error} />
+          <EmptyState icon={Inbox} title={t('studentTests.loadErrorTitle')} description={error} />
         ) : (tests?.length ?? 0) === 0 ? (
           <EmptyState
             icon={Inbox}
-            title="Доступных тестов пока нет"
-            description="Когда преподаватель опубликует тест, он появится здесь."
+            title={t('studentTests.emptyTitle')}
+            description={t('studentTests.emptyDescription')}
           />
         ) : (
           <Stack spacing={3}>
@@ -158,23 +159,23 @@ export const StudentTestsPage = () => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontFamily="heading" fontWeight={500}>
-              Начать тест?
+              {t('studentTests.confirmTitle')}
             </AlertDialogHeader>
             <AlertDialogBody color="ink.700">
               {pending && (
-                <>
-                  Тест начнётся сразу. Длительность <b>{pending.durationMinutes} мин</b>. Прервать
-                  нельзя — после старта таймер остановить невозможно. Каждый тест можно пройти{' '}
-                  <b>только один раз</b>.
-                </>
+                <Text
+                  dangerouslySetInnerHTML={{
+                    __html: t('studentTests.confirmBody', { minutes: pending.durationMinutes }),
+                  }}
+                />
               )}
             </AlertDialogBody>
             <AlertDialogFooter gap={3}>
               <Button ref={cancelRef} variant="ghost" onClick={dlg.onClose}>
-                Назад
+                {t('studentTests.back')}
               </Button>
               <Button variant="solid" onClick={onConfirmStart}>
-                Начать
+                {t('studentTests.confirmStart')}
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -192,8 +193,7 @@ interface RowProps {
 }
 
 const StudentTestRow = ({ test, passed, onStart, onView }: RowProps) => {
-  const minWord = pluralizeRu(test.durationMinutes, ['минута', 'минуты', 'минут']);
-  const qWord = pluralizeRu(test.questionsCount, ['вопрос', 'вопроса', 'вопросов']);
+  const { t } = useTranslation();
   const interactive = !!onView;
 
   return (
@@ -209,7 +209,7 @@ const StudentTestRow = ({ test, passed, onStart, onView }: RowProps) => {
         <Flex direction={{ base: 'column', md: 'row' }} justify="space-between" gap={4}>
           <Box flex="1" minW={0}>
             <Heading size="md" mb={2} noOfLines={2}>
-              {test.title || 'Без названия'}
+              {test.title || t('studentTests.untitled')}
             </Heading>
             {test.description && (
               <Text color="ink.700" fontSize="sm" noOfLines={3} mb={4}>
@@ -226,20 +226,24 @@ const StudentTestRow = ({ test, passed, onStart, onView }: RowProps) => {
               <HStack spacing={2}>
                 <Clock size={16} strokeWidth={1.5} />
                 <Text>
-                  {test.durationMinutes} {minWord}
+                  {test.durationMinutes} {t('common.minutes', { count: test.durationMinutes })}
                 </Text>
               </HStack>
               <HStack spacing={2}>
                 <ListChecks size={16} strokeWidth={1.5} />
                 <Text>
-                  {test.questionsCount} {qWord}
+                  {test.questionsCount} {t('common.questions', { count: test.questionsCount })}
                 </Text>
               </HStack>
               {passed && (
                 <HStack spacing={2} color={gradeColor(passed.percentage)}>
                   <CheckCircle2 size={16} strokeWidth={1.5} />
                   <Text>
-                    Пройден · {passed.score}/{passed.total} · {passed.percentage}%
+                    {t('studentTests.passedBadge', {
+                      score: passed.score,
+                      total: passed.total,
+                      percentage: passed.percentage,
+                    })}
                   </Text>
                 </HStack>
               )}
@@ -257,7 +261,7 @@ const StudentTestRow = ({ test, passed, onStart, onView }: RowProps) => {
                 size="lg"
                 w={{ base: 'full', md: 'auto' }}
               >
-                Посмотреть результат
+                {t('studentTests.viewResult')}
               </Button>
             ) : (
               <Button
@@ -266,7 +270,7 @@ const StudentTestRow = ({ test, passed, onStart, onView }: RowProps) => {
                 size="lg"
                 w={{ base: 'full', md: 'auto' }}
               >
-                Начать тест
+                {t('studentTests.start')}
               </Button>
             )}
           </Box>
